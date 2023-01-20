@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <title>电影天堂数据分析</title>
+    <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.lyshark.com/javascript/echarts/5.0.0/echarts.min.js"></script>
+</head>
+
+<body>
+   <!--<h2 class="panel-title">电影天堂网站数据分析可视化平台</h2>-->
+    <div class="box">
+        <div class="box1">
+            <div class="panel-body">
+			<div id="sum" style="width:80%; height: 300px;margin-left: 30px"></div>
+		</div>
+        </div>
+        <div class="box1">
+             <div class="panel-body">
+			<div id="grade" style="width:100%; height: 300px"></div>
+		</div>
+        </div>
+    </div>
+
+    <div class="boxs">
+        <div class="boxs1">
+            <div class="panel-body">
+			<div id="years" style="width:80%; height: 350px; margin-top: 10px; margin-left: 30px"></div>
+		</div>
+        </div>
+        <div class="boxs1">
+             <div class="panel-body">
+			<div id="country" style="width:100%; height: 350px"></div>
+		</div>
+        </div>
+    </div>
+
+    <div class="boxs">
+        <div class="boxs1">
+            <div class="panel-body">
+			<div id="time_long" style="width:80%; height: 350px; margin-top: 10px; margin-left: 30px"></div>
+		</div>
+        </div>
+         <div class="boxs1">
+            <div class="panel-body">
+			<img src="/img/doubanTop10cloud.png" style="width:98%; height: 330px; margin-top: 5px; margin-left: 5px"></img>
+		</div>
+        </div>
+    </div>
+
+</body>
+
+<style>
+    .box{
+        width: 100%;
+        height: 400px;
+        background-color: #dfe8e8;
+        display: flex;
+    }
+    .box .box1{
+        margin-left: 10px;
+        width: 50%;
+        height: 90%;
+        background-color: rgba(233, 238, 238, 0.05);
+        box-shadow: 0 0 2px 1px #cecdcd;
+    }
+    .boxs{
+        margin-top: 2px;
+        width: 100%;
+        height: 400px;
+        background-color: #dfe8e8;
+        display: flex;
+    }
+    .boxs .boxs1{
+        margin-top: 20px;
+        margin-left: 10px;
+        width: 50%;
+        height: 90%;
+        background-color: rgba(205, 227, 227, 0.09);
+       box-shadow: 0 0 2px 1px #cecdcd;
+    }
+</style>
+
+<script>
+    const ip = "http://127.0.0.1:5001/";
+    show_data()
+        //展示可视化图表
+       function show_data(){
+            get_num()
+            get_grade()
+            get_year()
+            get_country()
+            get_time()
+        }
+
+       function  get_num(){
+           var kv = new Array();
+		kv = {{ data | safe }}
+		var test = new Array();
+		for(var logkey in kv){
+			test.push( {value:kv[logkey], name:logkey} )
+		}
+			var main = echarts.init(document.getElementById("sum"));
+			var option = {
+			      title: {
+                   text: '站内电影各个类别电影占比'
+                  },
+				legend: {
+					orient: 'vertical',
+					left: 'right',
+				},
+				series: [
+					{
+						type: 'pie',
+						radius: '70%',
+						center: ['50%', '50%'],
+						detail: {formatter:'{value}'},
+						data: test
+					}
+				]
+			};
+			main.setOption(option,true);
+       }
+
+       function  get_grade(){
+           //数据请求
+         $.ajax({
+              url: ip+"/chart/read_file",
+              processData:false,
+              data:"",
+              contentType:'application/json;charset=utf-8',
+              type: 'get',
+              dataType: 'json',
+           success(data){
+              if(data.code == 0){
+                  var main1 = echarts.init(document.getElementById("grade"));
+            var option = {
+                    title: {
+                     text: '豆瓣评分数据表'
+              },
+              tooltip: {
+              trigger: 'axis',
+                  axisPointer: {
+                   type: 'shadow'
+                  }
+           },
+              legend: {},
+              grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+              },
+              xAxis: {
+                   type: 'value',
+                   boundaryGap: [0, 0.01]
+              },
+           yAxis: {
+             type: 'category',
+             data: data.data
+          },
+           series: [
+               {
+             name: '豆瓣评分',
+             type: 'bar',
+             data: data.value
+            },
+           ]
+         };
+			main1.setOption(option,true);
+              }
+           }
+          })
+       }
+
+       function  get_year(){
+           $.ajax({
+               url: ip+"/chart/year",
+               processData:false,
+               data:"",
+               contentType:'application/json;charset=utf-8',
+               type: 'get',
+               dataType: 'json',
+               success(data) {
+                    var main2 = echarts.init(document.getElementById("years"));
+           var option = {
+              title: {
+                   text: '近年电影上映趋势图'
+               },
+               tooltip: {
+               trigger: 'axis'
+                 },
+              xAxis: {
+              type: 'category',
+                  data: data.data
+              },
+              yAxis: {
+               type: 'value',
+                  axisLabel: {
+                    formatter: '{value} 部'
+                   }
+              },
+              series: [
+              {
+              data: data.value,
+              type: 'line'
+              }
+             ]
+          };
+          option && main2.setOption(option);
+               }
+           })
+       }
+
+       function  get_country(){
+          $.ajax({
+              url: ip + "/chart/country",
+              processData: false,
+              data: "",
+              contentType: 'application/json;charset=utf-8',
+              type: 'get',
+              dataType: 'json',
+              success(data) {
+                    var main3 = echarts.init(document.getElementById("country"));
+                    var option = {
+                title: {
+                   text: '不同国家上映电影数量统计（2018-2022）'
+               },
+            xAxis: {
+             type: 'category',
+             data: data.data,
+              },
+             yAxis: {
+               type: 'value'
+               },
+              series: [
+            {
+                 data: data.value,
+                 type: 'bar',
+                 showBackground: true,
+                 backgroundStyle: {color: 'rgba(180, 180, 180, 0.2)'
+             }
+    }
+  ]
+};
+                    option && main3.setOption(option);
+              }
+          })
+       }
+
+       function get_time(){
+              $.ajax({
+                  url: ip + "/chart/time",
+                  processData: false,
+                  data: "",
+                  contentType: 'application/json;charset=utf-8',
+                  type: 'get',
+                  dataType: 'json',
+                  success(data) {
+                   if(data.code == 1){
+                       var main4 = echarts.init(document.getElementById("time_long"));
+		        	   var option = {
+			          title: {
+                       text: '电影播放时长统计'
+                       },
+				      legend: {orient: 'vertical',
+					left: 'right',
+			      	},
+				   series: [
+				    	{
+				     		type: 'pie',
+				    		radius: '70%',
+				    		center: ['50%', '50%'],
+				    		detail: {formatter:'{value}'},
+				    		data: data.data
+				    	}
+				     ]
+			      };
+		        	   main4.setOption(option,true);
+                   }
+                  }
+              })
+       }
+
+</script>
+
+</html>

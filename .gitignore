@@ -1,0 +1,13 @@
+.DS_Store
+.pytest_cache
+.idea
+.vscode
+.mypy_cache
+*.pyc
+*.log*
+*.js
+__pycache__
+report/
+log/
+*.temp.jpg
+env.py

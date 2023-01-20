@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.lyshark.com/javascript/echarts/5.0.0/echarts.min.js"></script>
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            height: 100%;
+        }
+        body {
+            height: 100%;
+        }
+        .container {
+            height: 100%;
+            background-image: linear-gradient(to right, #2f279e, #a6c1ee);
+        }
+        .login-wrapper {
+            background-color: #fff;
+            width: 358px;
+            height: 588px;
+            border-radius: 15px;
+            padding: 0 50px;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .header {
+            font-size: 38px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 200px;
+        }
+        .input-item {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 0;
+            padding: 10px;
+            border-bottom: 1px solid rgb(128, 125, 125);
+            font-size: 15px;
+            outline: none;
+        }
+        .input-item:placeholder {
+            text-transform: uppercase;
+        }
+        .btn {
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin-top: 40px;
+            background-image: linear-gradient(to right, #a6c1ee, #2676bb);
+            color: #fff;
+        }
+        .msg {
+            text-align: center;
+            line-height: 88px;
+        }
+        a {
+            text-decoration-line: none;
+            color: #abc1ee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-wrapper">
+            <div class="header">用户注册</div>
+            <div class="form-wrapper">
+                <input type="text" id="username" placeholder="用户名 至少两个汉字" class="input-item">
+                <input type="password" id="password" placeholder="密码 至少6位" class="input-item">
+                <div class="btn" onclick="selectValue()">点击注册</div>
+            </div>
+            <div class="msg" onclick="go_chart()">
+                已经有账号了?
+                <a href="#">去登陆</a>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+       //进入数据分析页面
+       function go_chart(){
+        top.location.href = "http://127.0.0.1:5001/register";
+        }
+        //用户登陆
+        function selectValue() {
+
+        //声明value变量并将获取的值赋给value
+
+         var username = document.getElementById("username").value;
+         var password = document.getElementById("password").value;
+         if(username==""|| password==""){
+             alert("请填写完整注册信息")
+         }else if(username.length<2 || password.length< 6){
+             alert("请检查账号信息是否存在问题")
+         }else{
+             //窗口弹出input文本框输入的值
+             res = {
+                 'username':username,
+                 'password':password,
+                 'sex':"男",
+                 'root':"1"
+             }
+            $.ajax({
+              url: "http://127.0.0.1:5001/admin/register",
+              data:res,
+              type: 'post',
+              dataType: 'json',
+             success(data){
+                  if(data.code==0){
+                      alert(data.msg)
+                  }else {
+                      alert(data.msg)
+                  }
+                   top.location.href = "http://127.0.0.1:5001/";
+              }
+          })
+         }
+
+    }
+
+
+
+
+</script>
+</html>
+

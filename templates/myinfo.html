@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人中心</title>
+    <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/layui-main/dist/css/layui.css">
+    <script src="/layui-main/dist/layui.js"></script>
+    <link rel="stylesheet" href="../static/layui-main/dist/css/layui.css">
+    <script src="../static/layui-main/dist/layui.js"></script>
+</head>
+<body>
+<div th:replace="header::header-fragment"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title" id="LAY_mine">
+                <li class="layui-this" lay-id="info">我的资料</li>
+                <li lay-id="pass">密码修改</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-form layui-form-pane layui-tab-item layui-show">
+                    <div method="post" id="updateInfoForm" onsubmit="return false;" action="##">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">昵称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="username" name="username" required lay-verify="required"
+                                       autocomplete="off" value="" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">支持2-8位的英文和数字昵称</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sex" name="sex" autocomplete="off"
+                                       value=""
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="root" disabled name="root" autocomplete="off"
+                                       value=""
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label  class="layui-form-label">签名</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="随便写些什么刷下存在感" id="sign" name="sign" autocomplete="off"
+                                          text=""
+                                          class="layui-textarea" style="height: 80px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" onclick="updateInfo()">
+                                确认修改
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form layui-form-pane layui-tab-item">
+                    <form method="post" id="passwordForm" onsubmit="return false;" action="##">
+                             <div class="layui-form-item">
+                            <label class="layui-form-label">当前账户</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="nowusername" name="nowusername" required
+                                       lay-verify="required"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">当前密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="oldpassword" name="originalPassword" required
+                                       lay-verify="required"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="newPassword" name="newPassword" required
+                                       lay-verify="required"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">6到20个字符</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit onclick="updatePassword()">
+                                确认修改
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="fly-footer">
+</div>
+
+
+</body>
+<script>
+    const bbsUser ={
+        "username":  window.sessionStorage.getItem("username"),
+        "sex":  window.sessionStorage.getItem("sex"),
+        "root":  window.sessionStorage.getItem("root"),
+        "sign":  window.sessionStorage.getItem("sign"),
+        "id": window.sessionStorage.getItem("id"),
+        "createtime": window.sessionStorage.getItem("createtime"),
+    }
+    let username = document.getElementById("username");
+    let nowusername = document.getElementById("nowusername");
+    let sex = document.getElementById("sex")
+    let sign = document.getElementById("sign");
+    let root = document.getElementById("root")
+    username.value = bbsUser.username
+    nowusername.value = bbsUser.username
+    sex.value =bbsUser.sex
+    sign.value = bbsUser.sign
+    root.value = bbsUser.root
+    if(bbsUser.root=="1"){
+
+    }
+    console.log(bbsUser)
+    function updateInfo(){
+      const User ={
+        "username":  document.getElementById("username").value,
+        "sex":  document.getElementById("sex").value,
+        "sign": document.getElementById("sign").value,
+        "id":  window.sessionStorage.getItem("id"),
+      }
+      console.log(User)
+      $.ajax({
+          url: "http://127.0.0.1:5001/admin/update_info",
+          data: User,
+          type: 'post',
+          dataType: 'json',
+          success(res) {
+              layer.msg(res.msg);
+            }
+          })
+      }
+
+    function updatePassword(){
+       const User ={
+        "username":  document.getElementById("username").value,
+        "oldpas":  document.getElementById("oldpassword").value,
+        "newpas": document.getElementById("newPassword").value,
+        "id":  window.sessionStorage.getItem("id"),
+      }
+       $.ajax({
+          url: "http://127.0.0.1:5001/admin/update_info_pass",
+          data: User,
+          type: 'post',
+          dataType: 'json',
+          success(res) {
+              layer.msg(res.msg);
+            }
+          })
+    }
+</script>
+</html>
+

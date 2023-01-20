@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书共享</title>
+      <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/layui-main/dist/css/layui.css">
+    <script src="/layui-main/dist/layui.js"></script>
+    <link rel="stylesheet" href="../static/layui-main/dist/css/layui.css">
+    <script src="../static/layui-main/dist/layui.js"></script>
+</head>
+<body>
+<div>
+
+</div>
+<span class="layui-breadcrumb">
+  <a href="">首页</a>
+  <a href="">图书平台</a>
+  <a href="">图书共享</a>
+</span>
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">学术</li>
+    <li>编程</li>
+    <li>语言</li>
+    <li>人文</li>
+    <li>武侠</li>
+    <li>科幻</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+      <div class="layui-card">
+  <div class="layui-card-header">书籍信息</div>
+  <div class="layui-card-body">
+      <div class="bookbox" id="bookbox1">
+      </div>
+  </div>
+</div>
+    </div>
+      <div class="layui-tab-item ">
+          <div class="layui-card">
+              <div class="layui-card-header">书籍信息</div>
+              <div class="layui-card-body">
+                  <div class="bookbox" id="bookbox2">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="layui-tab-item ">
+          <div class="layui-card">
+              <div class="layui-card-header">书籍信息</div>
+              <div class="layui-card-body">
+                  <div class="bookbox" id="bookbox3">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="layui-tab-item ">
+          <div class="layui-card">
+              <div class="layui-card-header">书籍信息</div>
+              <div class="layui-card-body">
+                  <div class="bookbox" id="bookbox4">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="layui-tab-item">
+          <div class="layui-card">
+              <div class="layui-card-header">书籍信息</div>
+              <div class="layui-card-body">
+                  <div class="bookbox" id="bookbox5">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="layui-tab-item">
+          <div class="layui-card">
+              <div class="layui-card-header">书籍信息</div>
+              <div class="layui-card-body">
+                  <div class="bookbox" id="bookbox6">
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<style>
+    .layui-card-body .bookbox{
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+    }
+
+    .bookbox .book{
+        margin-top: 20px;
+        width: 200px;
+        height: 280px;
+        margin-left: 10px;
+        background-color: rgba(199, 199, 199, 0.57);
+        display: flex;
+    }
+
+    .book .pic{
+        width: 80%;
+        margin-left: 10%;
+        height: 70%;
+    }
+
+    .book .title{
+        font-size: 15px;
+        color: #b8a206;
+        width: 120px;
+        height: 20px;
+        margin-top: 100%;
+        margin-left: -80%;
+    }
+    .book .title1{
+        font-size: 12px;
+        color: #335ae8;
+        width: 120px;
+        height: 20px;
+        margin-top: 110%;
+        margin-left: -60%;
+    }
+    .book .title2{
+        font-size: 12px;
+        color: #2c9c05;
+        width: 120px;
+        height: 20px;
+        margin-top: 120%;
+        margin-left: -60%;
+    }
+
+    .book .buttons{
+      margin-top: 110%;
+    }
+
+</style>
+
+<script>
+//注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+layui.use('element', function(){
+  var element = layui.element;
+  //…
+});
+
+found_share()
+function  found_share(){
+    //窗口弹出input文本框输入的值
+    var search_data = ""
+    $.ajax({
+        url: "book/search?book_name="+search_data,
+        data:"",
+        contentType:'application/json;charset=utf-8',
+        type: 'get',
+        dataType: 'json',
+        success(data){
+            if(data.code==1){
+                var res = data.data
+                let list1 = '';
+                let list2 = '';
+                let list3 = '';
+                let list4 = '';
+                let list5 = '';
+                let list6 = '';
+                let  i = data.data.length;
+                for(let k = 0;k<i;k++){
+                   if(res[k].typename=='学术'){
+                       list1+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
+                           '</button>'+'</div></div>'
+                   }else if(res[k].typename=='编程'){
+                       list2+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
+                           '</button>'+'</div></div>'
+
+                   }else if(res[k].typename=='语言'){
+                       list3+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
+                           '</button>'+'</div></div>'
+
+                   }else if(res[k].typename=='人文'){
+                       list4+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
+                           '</button>'+'</div></div>'
+
+                   }else if(res[k].typename=='武侠'){
+                       list5+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
+                           '</button>'+'</div></div>'
+
+                   }else{
+                       list6+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
+                           '</button>'+'</div></div>'
+                   }
+                }
+                document.getElementById('bookbox1').innerHTML = list1;
+                document.getElementById('bookbox2').innerHTML = list2;
+                document.getElementById('bookbox3').innerHTML = list3;
+                document.getElementById('bookbox4').innerHTML = list4;
+                document.getElementById('bookbox5').innerHTML = list5;
+                document.getElementById('bookbox6').innerHTML = list6;
+
+            }else{
+                alert(data.msg)
+            }
+        }
+    })
+}
+
+function down(id) {
+
+    top.location.href = "book/down_book?id=" + id;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的分享</title>
+    <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../layui-main/dist/css/layui.css">
+    <script src="../layui-main/dist/layui.js"></script>
+    <link rel="stylesheet" href="../static/layui-main/dist/css/layui.css">
+    <script src="../static/layui-main/dist/layui.js"></script>
+</head>
+<body>
+<span class="layui-breadcrumb">
+  <a href="">首页</a>
+  <a href="">个人中心</a>
+  <a href="">我的分享</a>
+</span>
+<div class="leftbox">
+    <div class="layui-carousel" id="test1">
+        <div carousel-item>
+            <img src="../bar/one.png" alt="">
+            <img src="../bar/two.png" alt="">
+            <img src="../bar/three.png" alt="">
+        </div>
+    </div>
+</div>
+
+<div class="rightbox">
+    <input type="hidden" name="teaPhoto" id="teaimg">
+    <div class="layui-upload">
+        <div style="margin-top: 10px"></div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图书名称:</label>
+            <div class="layui-input-block">
+                <input id="title" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图书资源:</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="file_txt">
+                    <i class="layui-icon">&#xe67c;</i>上传文件
+                </button>
+            </div>
+        </div>
+        <label class="layui-form-label">图书封面:</label>
+        <button type="button" class="layui-btn" id="test2">上传封面</button>
+        <div class="layui-upload-list" style="margin-left: 250px;margin-top: -100px">
+            <img style="height: 120px; width: 100px" class="layui-upload-img" id="demo1">
+            <p id="demoText"></p>
+        </div>
+        <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button onclick="" class="layui-btn layui-btn-radius layui-btn-normal"  lay-filter="formDemo">立即分享</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">我的分享</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-card">
+                <div class="layui-card-header">分享列表</div>
+                <div class="layui-card-body">
+                    <div class="bookbox" id="bookbox1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .leftbox{
+       background-color: white;
+       box-shadow: 0 0 1px 2px rgba(217, 215, 215, 0.93);
+       width: 50%;
+       height: 280px;
+       margin-top:20px;
+       margin-left:20px;
+       display: flex;
+    }
+
+    .rightbox{
+        background-color: white;
+        width: 40%;
+        height: 280px;
+        margin-top:-280px;
+        margin-left:55%;
+    }
+
+    .tbfoot{
+        width: 100%;
+
+    }
+</style>
+<style>
+    .layui-card-body .bookbox{
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+    }
+
+    .bookbox .book{
+        margin-top: 20px;
+        width: 200px;
+        height: 280px;
+        margin-left: 10px;
+        background-color: rgba(199, 199, 199, 0.57);
+        display: flex;
+    }
+
+    .book .pic{
+        width: 80%;
+        margin-left: 10%;
+        height: 70%;
+    }
+
+    .book .title{
+        font-size: 15px;
+        color: #b8a206;
+        width: 120px;
+        height: 20px;
+        margin-top: 100%;
+        margin-left: -80%;
+    }
+    .book .title1{
+        font-size: 12px;
+        color: #335ae8;
+        width: 120px;
+        height: 20px;
+        margin-top: 110%;
+        margin-left: -60%;
+    }
+    .book .title2{
+        font-size: 12px;
+        color: #2c9c05;
+        width: 120px;
+        height: 20px;
+        margin-top: 120%;
+        margin-left: -60%;
+    }
+
+    .book .buttons{
+        margin-top: 110%;
+    }
+
+</style>
+<script>
+    layui.use('carousel', function(){
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+    });
+
+    layui.use('upload',function () {
+        var upload = layui.upload;
+        upload.render({
+            elem: '#test2'
+            ,url: '/admin/update_img' //写自己接口的路径
+            ,before: function(obj){
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result);
+                });
+            }
+            ,done:function (res) {
+                console.log(res)
+                if(res.code==1){
+                    //成功
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #4cae4c;">上传封面图片成功</span>');//上传成功的提示消息
+                    var fileupload = $('#teaimg');
+                    fileupload.attr("value",res.src);//给input框赋值，src是回传的图片名称/路径
+                }else{
+                    return layer.msg('上传失败');
+                }
+            }
+        });
+    })//文件上传
+
+    layui.use('upload', function(){
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#file_txt' //绑定元素
+            ,exts:'jpg|png|gif|bmp|jpeg|zip|rar|7z|pdf|doc|docx|xls|xlsx|avi|mp4|rmvb|wmv|txt|pub|pptx|ppt'
+            ,url: '/admin/update_txt' //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                if(res.code==1){
+                    layer.msg(res.msg,{icon:1});
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+    });
+
+</script>
+<script>
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element;
+        //…
+    });
+
+    found_share()
+    function  found_share(){
+        //窗口弹出input文本框输入的值
+        $.ajax({
+            url: "admin/mybrower?uid="+window.sessionStorage.getItem("id"),
+            data:"",
+            contentType:'application/json;charset=utf-8',
+            type: 'get',
+            dataType: 'json',
+            success(data){
+                if(data.code==1){
+                    var res = data.data
+                    let list1 = '';
+                    let list2 = '';
+                    let  i = data.data.length;
+                    for(let k = 0;k<i;k++){
+                        if(res[k].state==0){
+                            list1+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                                '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                                '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                                ' <text class="title2">' +"借阅时间:"+res[k].bk_time+ '</text>'+
+                                '<div class="buttons">'+'<button type="button" onclick="guihuan('+res[k].bid+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'归还'+
+                                '</button>'+'</div></div>'
+                        }else{
+                            list2+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                                '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                                '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                                ' <text class="title2">' +"归还时间:"+res[k].bk_time+ '</text>'+
+                                '<div class="buttons">'+'<button type="button" onclick="del_book('+res[k].bid+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'删除'+
+                                '</button>'+'</div></div>'
+                        }
+                    }
+                    document.getElementById('bookbox1').innerHTML = list1;
+                }else{
+                    layer.msg("当前没有分享的图书信息",{icon:5});
+                }
+            }
+        })
+    }
+    //归还
+    function guihuan(id) {
+        $.ajax({
+            url: "admin/guihuan?uid="+window.sessionStorage.getItem("id")+"&&bid="+id,
+            data:"",
+            contentType:'application/json;charset=utf-8',
+            type: 'get',
+            dataType: 'json',
+            success(data){
+                if(data.code==1){
+                    layer.msg(data.msg,{icon:1});
+                    found_share()
+                }else{
+                    layer.msg(data.msg,{icon:5});
+                }
+            }
+        })
+    }
+    //删除
+    function del_book(id) {
+        $.ajax({
+            url: "admin/del_book?uid="+window.sessionStorage.getItem("id")+"&&bid="+id,
+            data:"",
+            contentType:'application/json;charset=utf-8',
+            type: 'get',
+            dataType: 'json',
+            success(data){
+                if(data.code==1){
+                    layer.msg(data.msg,{icon:1});
+                }else{
+                    layer.msg(data.msg,{icon:5});
+                }
+            }
+        })
+        found_share()
+    }
+</script>
+
+</body>
+</html>

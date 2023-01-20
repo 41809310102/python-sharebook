@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/百度首页.css">
+	  <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+	  <link rel="stylesheet" href="/layui-main/dist/css/layui.css">
+	  <script src="/layui-main/dist/layui.js"></script>
+	  <link rel="stylesheet" href="../static/layui-main/dist/css/layui.css">
+	  <script src="../static/layui-main/dist/layui.js"></script>
+  </head>
+  <body>
+	<div class="background">
+	  <div class="navigationbar clearfix" >
+	    <ul>
+	      <li><a href=""><b>检索说明</b></a></li>
+	      <!-- 父子关系 -->
+	      <li class="menu">
+	      		<a href="" class="set">
+		      		<b>设置</b>
+	      		</a>
+	      		<!-- 二级菜单的列表 -->
+	      		<ul class="display">
+				      <li><a href="">搜索设置</a></li>
+				      <li><a href="" >高级搜索</a></li>
+				      <li><a href="">关闭预测</a></li>
+				      <li><a href="">隐私设置</a></li>
+			    </ul>
+	      </li>
+	      <li><a href=""><b>科幻</b></a></li>
+	      <li><a href=""><b>学术</b></a></li>
+	      <li><a href=""><b>玄幻</b></a></li>
+	      <li><a href=""><b>言情</b></a></li>
+	      <li><a href=""><b>恐怖</b></a></li>
+	      <li><a href=""><b>脑洞</b></a></li>
+	      <li><a href=""><b>武侠</b></a></li>
+	    </ul>
+	  </div>
+
+	  <div class="baidutu">
+	    <img src="../img/search.png" alt="" align="center" >
+	  </div>
+	  <div class="shuru">
+	  	<span class="icon"></span>
+        <input type="text" id="search" name="search"  class="kuang"><input class="anniu" type="button" onclick="search()" value="图书检索" >
+	  </div>
+	</div>
+
+	<div class="boxsearch" id="box">
+	</div>
+
+
+	<style>
+		*{
+	margin:0;
+	padding: 0;
+}
+
+.background,.navigationbar,.baidutu,.shuru,.erweima,.baidu,.bottom1,.bottom2{
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+
+}
+.clearfix:after {
+          content: ".";
+          display: block;
+          height: 0;
+          clear: both;
+          visibility: hidden;
+      }
+.baidutu img{
+	margin: 43px 0 43px;
+	width: 234px;
+	height: 74px;
+}
+.navigationbar>ul>li>a{
+	color: black;
+    font-size:12px;
+    font-size: 15px;
+}
+.navigationbar>ul>li>a:hover{
+	color: blue;
+}
+.navigationbar>ul>li {
+	float: right;
+	list-style: none;
+	padding:30px 10px 0;
+	position: relative;
+}
+.navigationbar>ul>li.menu:hover .display{
+	display: block;
+}
+.display{
+	display: none;
+}
+
+.display li{
+	list-style: none;
+	width: 80px;
+	height: 20px;
+	margin: 5px 0 5px;
+	font-size: 14px;
+}
+
+.display li:hover{
+	background-color: blue;
+}
+.display{
+	position: absolute;
+	left: -20px;
+	top: 50px;
+}
+
+.display li a{
+	text-decoration: none;
+	color: black;
+}
+.shuru{
+	width: 709px;
+	height: 40px;
+	position: relative;
+}
+
+.icon:hover{
+	background-position: 0px -20px;
+}
+
+
+
+.kuang{
+	width:595px;
+	height: 38px;
+	border: 1px solid #317EF3;
+	float: left;
+}
+
+.anniu{
+	width:112px;
+	height: 40px;
+	background-color: #3385FF;
+	border: 0;
+	float: left;
+}
+.erweima{
+	padding-top: 150px;
+}
+.baidu{
+	padding-top: 1px;
+}
+
+.bottom1 {
+	width: 358px;
+	height: 14px;
+	font-size: 13px;
+
+}
+.bottom2 {
+	width: 572px;
+	height: 16px;
+	color: #999999;
+	font-size: 13px;
+}
+.bottom1 ul {
+	overflow: hidden;
+}
+.bottom2 ul {
+	overflow: hidden;
+}
+.bottom1 ul li{
+	float: left;
+    list-style: none;
+    margin: 15px 10px 10px;
+}
+.bottom2 ul li{
+	float: left;
+	list-style: none;
+	margin: 20px 0px 0px;
+}
+.bottom1 ul li a{
+	color: #999999;
+}
+.bottom2 ul li a{
+	color: #999999;
+}
+	</style>
+	<style>
+		.boxsearch{
+			width: 80%;
+			margin-left: 10%;
+			margin-top: 40px;
+			//box-shadow: 0 0 2px 1px #f6f6f6;
+			border-radius:10px ;
+		}
+		.boxsearch .child{
+			display: flex;
+			width: 90%;
+			height: 160px;
+			margin-left: 5%;
+			box-shadow: 0 0 2px 1px #d4d2d2;
+			border-radius:10px ;
+		}
+		.child .pic{
+			width: 100px;
+			height: 120px;
+			margin-left: 2%;
+			margin-top: 15px;
+		}
+		.child .title{
+			width: 250px;
+			color: #0C0C0C;
+			margin-left: 5%;
+			font-size: 20px;
+			margin-top: 20px;
+		}
+		.child .actor{
+			color: #0C0C0C;
+			font-size: 15px;
+			margin-top: 60px;
+			margin-left: -250px;
+		}
+		.child .num{
+			color: #dcc43e;
+			font-size: 15px;
+			margin-top: 60px;
+			margin-left: 10px;
+		}
+		.child .desc{
+			color: #3163db;
+			font-size: 15px;
+			margin-top: 90px;
+			margin-left: -180px;
+			width: 600px;
+		}
+
+		.child .buttons{
+			margin-top: 60px;
+			margin-left: 10%;
+		}
+
+
+	</style>
+	<script>
+     function search(){
+		 var search_data = document.getElementById("search").value;
+		 //窗口弹出input文本框输入的值
+		 $.ajax({
+			 url: "book/search?book_name="+search_data,
+			 data:"",
+			 contentType:'application/json;charset=utf-8',
+			 type: 'get',
+			 dataType: 'json',
+			 success(data){
+				 if(data.code==1){
+				 	 var res = data.data
+					 let list = '';
+					 let  i = data.data.length;
+					 for(let k = 0;k<i;k++){
+						 list+='<div class="child">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+								 '<text class="title">' +res[k].name+ '</text>'+
+								 '<text class="actor">' +"作者:"+res[k].actor+ '</text>'+
+								 ' <text class="num">' +"借阅次数:"+res[k].brownum+ '</text>'+
+								 ' <text class="desc">' +res[k].desction+ '</text>'+
+								 '<div class="buttons">'+'<button type="button" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'借阅'+
+								 '</button>'+'</div></div>'
+
+					 }
+					 document.getElementById('box').innerHTML = list;
+				 }else{
+					 alert(data.msg)
+				 }
+			 }
+		 })
+	 }
+
+
+	</script>
+  </body>
+</html>

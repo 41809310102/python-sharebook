@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户列表</title>
+<link rel="stylesheet" href="/layui-main/dist/css/layui.css" media="all">
+</head>
+<body>
+	<!-- 搜索条件 -->
+	<fieldset class="layui-elem-field layui-field-title"
+		style="margin-top: 20px">
+		<legend>查询条件</legend>
+		<div class="layui-form" action="" method="post">
+            <f class="layui-container">
+             <div class="layui-row">
+               <div class="layui-col-md9">
+                	<div class="layui-form-item">
+				<div class="layui-line">
+					<label class="layui-form-label">编号</label>
+					<div class="layui-input-inline">
+						<input type="text" id="ids" name="id" placeholder="请输入编号"
+							autocomplete="off" class="layui-input">
+						<!-- required lay-verify="required"验证 -->
+					</div>
+				</div>
+				<div class="layui-line">
+					<label class="layui-form-label">用户名</label>
+					<div class="layui-input-inline">
+						<input type="text" id="username" name="username" placeholder="请输入用户名"
+							autocomplete="off" class="layui-input">
+					</div>
+				</div>
+			</div>
+                  </div>
+               <div class="layui-col-md3">
+                    <div class="layui-form-item" style="text-align: center;">
+				<div class="layui-input-block">
+					<button
+						class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-search"
+					onclick="sreach()">查询</button>
+					<button type="reset"
+						class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh "
+						onclick="isno()">重置</button>
+				</div>
+			</div>
+                 </div>
+		</div>
+	</fieldset>
+	<!-- 数据表格开始 -->
+	<div class="layui-btn-container" style="display: none;"
+		id="userToolBar">
+		<button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+<!--		<button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>-->
+	</div>
+	<div id="userBar" style="display: none;">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">查看</a> <a
+			class="layui-btn layui-btn-xs" lay-event="del">删除</a> <a
+			class="layui-btn layui-btn-xs layui-btn-danger"  lay-event="update">修改</a>
+	</div>
+	<table class="layui-hide" id="userTable" lay-filter="userTable"></table>
+	<!-- 数据表格结束 -->
+	<!-- 添加和修改的弹出层代码-->
+	<div style="display: none; padding: 20px;" id="saveOrupdate">
+		<form action="" class="layui-form" lay-filter="dateFrm" id="dateFrm">
+			<div class="layui-form-item">
+				<div class="layui-line">
+					<label class="layui-form-label">用户名</label>
+					<div class="layui-input-inline">
+						<input type="text" name="username" lay-verify="required"
+							placeholder="请输入用户名" autocomplete="off" class="layui-input">
+						<!-- required lay-verify="required"验证 -->
+					</div>
+				</div>
+				<div class="layui-line">
+					<label class="layui-form-label">密码</label>
+					<div class="layui-input-inline">
+						<input type="password" name="password" lay-verify="required"
+							placeholder="请输入密码" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-line">
+					<label class="layui-form-label">性别</label>
+					<div class="layui-input-inline">
+						<input type="radio" name="sex" value="男" title="男" checked="checked">
+						<input type="radio" name="sex" value="女" title="女">
+						<!-- required lay-verify="required"验证 -->
+					</div>
+				</div>
+				<div class="layui-line">
+					<label class="layui-form-label">权限</label>
+					<div class="layui-input-inline">
+						<input type="text" name="root" lay-verify="required"
+							placeholder="请输入权限(1为普通用户，2为管理用户)" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item" style="text-align: center;">
+				<div class="layui-input-block">
+					<button
+						class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit=''
+						lay-filter="doSubmit">提交</button>
+						<!-- lay-submit=''判断提交的form表单是否为空 -->
+					<button type="reset"
+						class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh "
+						lay-filter="submit">重置</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 添加和修改的弹出层代码-->
+	<script src="/layui-main/dist/layui.js"></script>
+	<script>
+		let listurl = "/admin/user_list";
+		getdata()
+	    function getdata(){
+	    		layui.use([ 'table', 'laydate','jquery','layer','form' ], function() {
+			var $=layui.jquery;
+			var table = layui.table;
+			var form=layui.form;
+			var layer=layui.layer;
+			var laydate = layui.laydate;
+
+			//绑定时间选择器
+			laydate.render({
+				elem : '#startTime'
+			})
+			laydate.render({
+				elem : '#endTime'
+			})
+        console.log(listurl)
+			//数据表格
+		var tableIns=table.render({
+				elem : '#userTable' //渲染的目标对象
+				,
+				url : listurl //数据接口
+				,
+				title : '用户数据' //数据表格的标题
+				,
+				page : true //开启分页
+				,
+				toolbar : '#userToolBar'//表格的工具条
+				,
+				defaultToolbar : [ 'filter', 'print', 'exports' ],
+				cols : [ [ //表头
+				{
+					type : 'checkbox',
+					fixed : 'left'
+				} //表格的复选框 LAY_CHECKED 表示是否选中了复选框
+				, {
+					type : 'numbers'
+				} //表格的数据配列
+				, {
+					field : 'id',
+					title : 'ID',
+					sort : true
+				} //sort 是否排序布尔值
+				, {
+					field : 'username',
+					title : '用户名'
+				}, {
+					field : 'sex',
+					title : '性别'
+				}, {
+					field : 'createtime',
+					title : '创建时间',
+					edit : true
+				}, {
+					field : 'password',
+					title : '密码',
+					edit : true
+				}, {
+					field : 'root',
+					title : '权限(1为普通用户，2为管理用户)',
+					edit : true
+				}, {
+					fixed : 'right',
+					title : '操作',
+					toolbar : '#userBar',
+					width : 200,
+					align : 'center'
+				} ] ]
+			});
+			//监听头部事件
+			var tableTns = table.on("toolbar(userTable)", function(obj) {
+				switch (obj.event) {
+				case 'add':
+					openAddUser();
+					break;
+				case 'delete':
+					layer.msg('删除');
+					break;
+				case 'update':
+					layer.msg('编辑');
+					break;
+				};
+			});
+			//保存
+			table.on('tool(userTable)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+				var data = obj.data; //获得当前行数据
+				var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+				if (layEvent === 'edit') { //查看
+					layer.msg("信息无需展示，可在所在表数据中查看")
+				} else if (layEvent === 'del') { //删除
+					layer.confirm('真的删除行么', function(index) {
+						obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+						layer.close(index);
+						//向服务端发送删除指令
+						$.ajax(
+								{
+									url: "http://127.0.0.1:5001/admin/del_user?id="+data.id,
+                                     data:"",
+                                     contentType:'application/json;charset=utf-8',
+                                     type: 'get',
+                                     dataType: 'json',
+									 success(res){
+									    	if(res.code==1){
+												ltableIns.reload(); //回调表格数据
+											}
+									}
+								}
+						)
+					});
+				} else if (layEvent === 'update') { //编辑
+					openUpdateUser(data);
+				    console.log(data);
+				}
+			});
+			var url;
+			var mainIndex;
+			//弹出层方法 添加页面
+			function openAddUser() {
+			  mainIndex=layer.open({
+					type:1,
+					title:'添加用户',
+					content:$("#saveOrupdate"),
+					area:['700px','300px'],
+					success:function(index){
+						//清空数据表格
+						$('#dateFrm')[0].reset();
+						url='';
+					}
+				})
+			}
+			//弹出层方法 修改页面
+			function openUpdateUser(data) {
+				  console.log(data)
+				  mainIndex=layer.open({
+					type:1,
+					title:'修改用户',
+					content:$("#saveOrupdate"),
+					area:['700px','300px'],
+					success:function(index){
+						form.val('dateFrm',data);
+						url='date/update/updateUser';
+					}
+				})
+			}
+		});
+		}
+		      //查询
+		function sreach(){
+			const id = document.getElementById("ids").value;
+			const username = document.getElementById("username").value;
+			listurl = "/admin/sreach_list?id="+id+"&&username="+username
+			//刷新数据表格
+			console.log(listurl)
+			getdata()
+		}
+
+		function isno(){
+			let id = document.getElementById("ids");
+			let username = document.getElementById("username");
+			id.value = ""
+			username.value =""
+		}
+				//提交重置
+		  form.on("submit(doSubmit)",function(obj){
+				//序列化表单数据
+				var param=$('#dateFrm').serialize();
+				$.post(url,param,function(obj){
+					layer.msg("成功");
+					//关闭弹出层
+					layer.close(mainIndex);
+					//刷新数据表格
+					ltableIns.reload(); //回调表格数据
+				})
+			})
+	</script>
+</body>
+</html>
+
+

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的借阅</title>
+      <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/layui-main/dist/css/layui.css">
+    <script src="/layui-main/dist/layui.js"></script>
+    <link rel="stylesheet" href="../static/layui-main/dist/css/layui.css">
+    <script src="../static/layui-main/dist/layui.js"></script>
+</head>
+<body>
+<div style="margin-top:20px">
+
+</div>
+<span class="layui-breadcrumb">
+  <a href="">首页</a>
+  <a href="">个人中心</a>
+  <a href="">我的借阅</a>
+</span>
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">借阅历史</li>
+    <li>归还历史</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+      <div class="layui-card">
+  <div class="layui-card-header">借阅列表</div>
+  <div class="layui-card-body">
+      <div class="bookbox" id="bookbox1">
+      </div>
+  </div>
+</div>
+    </div>
+      <div class="layui-tab-item ">
+          <div class="layui-card">
+              <div class="layui-card-header">归还历史</div>
+              <div class="layui-card-body">
+                  <div class="bookbox" id="bookbox2">
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<style>
+    .layui-card-body .bookbox{
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto;
+    }
+
+    .bookbox .book{
+        margin-top: 20px;
+        width: 200px;
+        height: 280px;
+        margin-left: 10px;
+        background-color: rgba(199, 199, 199, 0.57);
+        display: flex;
+    }
+
+    .book .pic{
+        width: 80%;
+        margin-left: 10%;
+        height: 70%;
+    }
+
+    .book .title{
+        font-size: 15px;
+        color: #b8a206;
+        width: 120px;
+        height: 20px;
+        margin-top: 100%;
+        margin-left: -80%;
+    }
+    .book .title1{
+        font-size: 12px;
+        color: #335ae8;
+        width: 120px;
+        height: 20px;
+        margin-top: 110%;
+        margin-left: -60%;
+    }
+    .book .title2{
+        font-size: 12px;
+        color: #2c9c05;
+        width: 120px;
+        height: 20px;
+        margin-top: 120%;
+        margin-left: -60%;
+    }
+
+    .book .buttons{
+      margin-top: 110%;
+    }
+
+</style>
+
+<script>
+//注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+layui.use('element', function(){
+  var element = layui.element;
+  //…
+});
+
+found_share()
+function  found_share(){
+    //窗口弹出input文本框输入的值
+    $.ajax({
+        url: "admin/mybrower?uid="+window.sessionStorage.getItem("id"),
+        data:"",
+        contentType:'application/json;charset=utf-8',
+        type: 'get',
+        dataType: 'json',
+        success(data){
+            if(data.code==1){
+                var res = data.data
+                let list1 = '';
+                let list2 = '';
+                let  i = data.data.length;
+                for(let k = 0;k<i;k++){
+                   if(res[k].state==0){
+                       list1+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"借阅时间:"+res[k].bk_time+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="guihuan('+res[k].bid+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'归还'+
+                           '</button>'+'</div></div>'
+                   }else{
+                       list2+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
+                           '<text class="title">' +"书名:"+res[k].name+ '</text>'+
+                           '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"归还时间:"+res[k].bk_time+ '</text>'+
+                           '<div class="buttons">'+'<button type="button" onclick="del_book('+res[k].bid+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'删除'+
+                           '</button>'+'</div></div>'
+                   }
+                }
+                document.getElementById('bookbox1').innerHTML = list1;
+                document.getElementById('bookbox2').innerHTML = list2;
+            }else{
+                layer.msg("当前没有图书信息",{icon:5});
+            }
+        }
+    })
+}
+//归还
+function guihuan(id) {
+    $.ajax({
+        url: "admin/guihuan?uid="+window.sessionStorage.getItem("id")+"&&bid="+id,
+        data:"",
+        contentType:'application/json;charset=utf-8',
+        type: 'get',
+        dataType: 'json',
+        success(data){
+            if(data.code==1){
+                layer.msg(data.msg,{icon:1});
+                found_share()
+            }else{
+                layer.msg(data.msg,{icon:5});
+            }
+        }
+})
+}
+//删除
+function del_book(id) {
+    $.ajax({
+        url: "admin/del_book?uid="+window.sessionStorage.getItem("id")+"&&bid="+id,
+        data:"",
+        contentType:'application/json;charset=utf-8',
+        type: 'get',
+        dataType: 'json',
+        success(data){
+            if(data.code==1){
+                layer.msg(data.msg,{icon:1});
+            }else{
+                layer.msg(data.msg,{icon:5});
+            }
+        }
+    })
+    found_share()
+}
+</script>
+</body>
+</html>
