@@ -1,9 +1,8 @@
 import codecs
 import os
 
-
-
 from dao.Brower import Brower
+from dao.Sharebook import Sharebook
 from dao.User import User
 from utils.mybaits import create_table
 from utils.create_sql import create_db
@@ -48,7 +47,7 @@ def py_create(name, code):
 
 
 if __name__ == '__main__':
-    obj = Brower()
-    create_table(create_db("brower", obj))
-    # create_class('Brower', ['id', 'uid', 'bid', 'bk_time','state'], '../dao/Brower.py')
-    # create_class('', ['id', 'userid', 'movie_name', 'grade'],'../dao/Gradeuser')
+    obj = Sharebook()
+    create_table(create_db("sharebook", obj))
+    # create_class('Sharebook', ['id', 'title', 'pic', 'actor', 'state', 'share_name'], '../dao/Sharebook.py')
+    # create_class('', ['id', 'userid', 'movie_name', 'grade'], '../dao/Gradeuser')

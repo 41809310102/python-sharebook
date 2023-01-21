@@ -36,6 +36,12 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">图书作者:</label>
+            <div class="layui-input-block">
+                <input id="actor" type="text" name="title" required  lay-verify="required" placeholder="请输入作者名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">图书资源:</label>
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="file_txt">
@@ -51,7 +57,7 @@
         </div>
         <div class="layui-form-item">
         <div class="layui-input-block">
-            <button onclick="" class="layui-btn layui-btn-radius layui-btn-normal"  lay-filter="formDemo">立即分享</button>
+            <button onclick="istoshare()" class="layui-btn layui-btn-radius layui-btn-normal"  lay-filter="formDemo">立即分享</button>
         </div>
     </div>
     </div>
@@ -154,6 +160,13 @@
 
 </style>
 <script>
+    var myshare = {
+        'title':"",
+        'img': "",
+        'id':"",
+        'myname':window.sessionStorage.getItem("username"),
+        'actor':"",
+    }
     layui.use('carousel', function(){
         var carousel = layui.carousel;
         //建造实例
@@ -183,6 +196,7 @@
                     demoText.html('<span style="color: #4cae4c;">上传封面图片成功</span>');//上传成功的提示消息
                     var fileupload = $('#teaimg');
                     fileupload.attr("value",res.src);//给input框赋值，src是回传的图片名称/路径
+                    myshare.img = res.src
                 }else{
                     return layer.msg('上传失败');
                 }
@@ -202,6 +216,7 @@
                 //上传完毕回调
                 if(res.code==1){
                     layer.msg(res.msg,{icon:1});
+                    myshare.id = res.id
                 }
             }
             ,error: function(){
@@ -209,6 +224,21 @@
             }
         });
     });
+
+
+    function istoshare(){
+        myshare.actor = document.getElementById("actor").value
+        myshare.title = document.getElementById("title").value
+        $.ajax({
+            url: "/admin/addbook",
+            data:myshare,
+            type: 'POST',
+            dataType: 'json',
+            success(data){
+                layer.msg(data,{icon:1});
+            }
+        })
+    }
 
 </script>
 <script>

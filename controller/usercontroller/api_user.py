@@ -310,13 +310,14 @@ def get_update_txt():
         # input标签中的name的属性值
         f = request.files['file']
         # 拼接地址，上传地址，f.filename：直接获取文件名
-        f.save(os.path.join("bookzip/booktxt/", "23.txt"))
+        str_s = get_by_id()
+        f.save(os.path.join("bookzip/booktxt/", "{}.txt".format(str_s)))
         # 输出上传的文件名
         print(request.files, f.filename)
         res = {
             'code': 1,
             'msg': '文件上传成功!',
-            'id': 23
+            'id': str_s
         }
         return json.dumps(res).encode('utf-8')
     else:
@@ -339,8 +340,32 @@ def get_update_img():
         res = {
             'code': 1,
             'msg': '封面上传成功!',
-            'img': "../img/book/{}".format(f.filename)
+            'src': "../img/book/{}".format(f.filename)
         }
         return json.dumps(res).encode('utf-8')
     else:
         return render_template('myshare.html')
+
+
+# 获取当前信息数据
+def get_by_id():
+    sql = "select id from book where id>0 order by id desc limit 1"
+    res = mybaits.select(sql, ['id'])
+    return str(res[0]['id'] + 1)
+
+
+# 添加分享的书籍到数据库中
+@api_url_user.route("/addbook", methods=['POST', 'GET'])
+def add_sharebook():
+    title = request.form['title']
+    ids = request.form['id']
+    pic = request.form['img']
+    myname = request.form['myname']
+    print(request.form)
+    return "success"
+
+
+
+
+if __name__ == '__main__':
+    get_by_id()
