@@ -54,7 +54,7 @@
                     <li class="layui-nav-item">
                         <a href="javascript:;">图书平台</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;"  data-src="/book/bookpage">图书列表</a></dd>
+                            <dd><a href="javascript:;"  id="book-admin" data-src="/book/bookpage">图书列表</a></dd>
                             <dd><a href="javascript:;"  data-src="/browbooks/page">图书借阅</a></dd>
                             <dd><a href="javascript:;"  data-src="/searchpage/list">图书检索</a></dd>
                             <dd><a href="javascript:;"  data-src="/searchpage/share">图书共享</a></dd>
@@ -95,6 +95,7 @@
         if(window.sessionStorage.getItem( "root" )=="1"){
 
               document.getElementById("user-admin").style.display="none"; //隐藏
+              document.getElementById("book-admin").style.display="none"; //隐藏
         }
     }
     function exit(){

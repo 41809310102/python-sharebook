@@ -35,19 +35,6 @@
         </div>
     </div>
 
-    <div class="boxs">
-        <div class="boxs1">
-            <div class="panel-body">
-			<div id="time_long" style="width:80%; height: 350px; margin-top: 10px; margin-left: 30px"></div>
-		</div>
-        </div>
-         <div class="boxs1">
-            <div class="panel-body">
-			<img src="/img/doubanTop10cloud.png" style="width:98%; height: 330px; margin-top: 5px; margin-left: 5px"></img>
-		</div>
-        </div>
-    </div>
-
 </body>
 
 <style>
@@ -103,7 +90,7 @@
 			var main = echarts.init(document.getElementById("sum"));
 			var option = {
 			      title: {
-                   text: '站内电影各个类别电影占比'
+                   text: '站内书籍各个类别占比'
                   },
 				legend: {
 					orient: 'vertical',
@@ -136,7 +123,7 @@
                   var main1 = echarts.init(document.getElementById("grade"));
             var option = {
                     title: {
-                     text: '豆瓣评分数据表'
+                     text: '用户性别占比'
               },
               tooltip: {
               trigger: 'axis',
@@ -161,7 +148,7 @@
           },
            series: [
                {
-             name: '豆瓣评分',
+             name: '人数',
              type: 'bar',
              data: data.value
             },
@@ -185,7 +172,7 @@
                     var main2 = echarts.init(document.getElementById("years"));
            var option = {
               title: {
-                   text: '近年电影上映趋势图'
+                   text: '本周借阅趋势图'
                },
                tooltip: {
                trigger: 'axis'
@@ -224,7 +211,7 @@
                     var main3 = echarts.init(document.getElementById("country"));
                     var option = {
                 title: {
-                   text: '不同国家上映电影数量统计（2018-2022）'
+                   text: '不同类型书籍余量'
                },
             xAxis: {
              type: 'category',
@@ -248,39 +235,6 @@
           })
        }
 
-       function get_time(){
-              $.ajax({
-                  url: ip + "/chart/time",
-                  processData: false,
-                  data: "",
-                  contentType: 'application/json;charset=utf-8',
-                  type: 'get',
-                  dataType: 'json',
-                  success(data) {
-                   if(data.code == 1){
-                       var main4 = echarts.init(document.getElementById("time_long"));
-		        	   var option = {
-			          title: {
-                       text: '电影播放时长统计'
-                       },
-				      legend: {orient: 'vertical',
-					left: 'right',
-			      	},
-				   series: [
-				    	{
-				     		type: 'pie',
-				    		radius: '70%',
-				    		center: ['50%', '50%'],
-				    		detail: {formatter:'{value}'},
-				    		data: data.data
-				    	}
-				     ]
-			      };
-		        	   main4.setOption(option,true);
-                   }
-                  }
-              })
-       }
 
 </script>
 

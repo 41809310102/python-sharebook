@@ -52,20 +52,33 @@ def get_add():
     book.set_desction("'{}'".format(data['desction']))
     book.set_typeid(data['typeid'])
     book.set_typename("'{}'".format(get_type(data['typeid'])))
-    print(book.get_typename())
-    res = mybaits.add(
-        create_sql.create_insert(
-            ['name', 'pic', 'actor', 'createtime', 'brownum', 'downurl', 'typeid', 'desction', 'publisher', 'state',
-             'typename'],
-            [book.get_name(), book.get_pic(), book.get_actor(),
-             book.get_createtime(),
-             book.get_brownum(), book.get_downurl(), book.get_typeid(), book.get_desction(), book.get_publisher(),
-             book.get_state(), book.get_typename()], "book"))
-    print(book.get_typename())
-    if res == 1:
+    if data['id'] is not None:
+        # 修改数据
+        sql = create_sql.create_update("book", ['name', 'pic', 'actor', 'createtime', 'brownum', 'downurl', 'typeid',
+                                                'desction', 'publisher', 'state',
+                                                'typename'], [book.get_name(), book.get_pic(), book.get_actor(),
+                                                              book.get_createtime(),
+                                                              book.get_brownum(), book.get_downurl(), book.get_typeid(),
+                                                              book.get_desction(), book.get_publisher(),
+                                                              book.get_state(), book.get_typename()], ['id'],
+                                       '{}'.format(str(data['id'])))
+        print(sql)
+        mybaits.update(sql)
         return "success"
     else:
-        return "fail"
+        res = mybaits.add(
+            create_sql.create_insert(
+                ['name', 'pic', 'actor', 'createtime', 'brownum', 'downurl', 'typeid', 'desction', 'publisher', 'state',
+                 'typename'],
+                [book.get_name(), book.get_pic(), book.get_actor(),
+                 book.get_createtime(),
+                 book.get_brownum(), book.get_downurl(), book.get_typeid(), book.get_desction(), book.get_publisher(),
+                 book.get_state(), book.get_typename()], "book"))
+        print(book.get_typename())
+        if res == 1:
+            return "success"
+        else:
+            return "fail"
 
 
 @api_url_book.route('/search', methods=['POST', 'GET'])
@@ -98,4 +111,3 @@ def get_type(id):
     sql = create_sql.create_select(['*'], ['typeid', 'typename'], 'typedb', ['"%{}%"'.format(id), '"%{}%"'.format("")])
     res = mybaits.select(sql, ['typeid', 'typename'])
     return res[0]['typename']
-

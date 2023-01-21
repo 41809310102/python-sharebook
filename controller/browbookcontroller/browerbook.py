@@ -33,6 +33,16 @@ def get_addbro():
     bid = request.form['bid']
     uid = request.form['uid']
     bt_time = datetime.datetime.now().strftime('%Y-%m-%d')
+    # 先判断当前是否可借
+    sql4 = "select brownum from book where id={}".format(str(bid))
+    res_bro = mybaits.select(sql4, ['brownum'])
+    if res_bro[0]['brownum'] == 0:
+        res_data = {
+            'code': -1,
+            'msg': "该图书暂无余量，请联系管理员！"
+        }
+        return res_data
+
     sql1 = create_sql.create_selectbyid(['id'], ['uid', 'bid'], 'brower',
                                         ['{}'.format(str(uid)), '{}'.format(str(bid))])
     res = mybaits.select(sql1, ['id'])
@@ -52,7 +62,8 @@ def get_addbro():
                 'msg': "借阅成功"
             }
             # 成功后将书籍的借阅数量减一
-
+            sql = "update book set brownum = brownum-1 WHERE `id` = {}".format(str(bid))
+            mybaits.update(sql)
         else:
             res_data = {
                 'code': 1,

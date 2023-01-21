@@ -245,7 +245,7 @@ def get_all_bro():
             sql_book = create_sql.create_selectbyid(['name', 'actor', 'pic', 'publisher'], ['id'], 'book',
                                                     ['{}'.format(k['bid'])])
             res_data = mybaits.select(sql_book, ['name', 'actor', 'pic', 'publisher'])
-
+            print(res_data)
             node = res_data[0]
             node['bk_time'] = k['bk_time']
             node['state'] = k['state']
