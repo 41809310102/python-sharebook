@@ -365,21 +365,61 @@ def add_sharebook():
     pic = request.form['img']
     myname = request.form['myname']
     actor = request.form['actor']
-    sql = create_sql.create_insert(['title', 'pic', 'actor', 'share_name', 'state'],
-                                   ["'{}'".format(title), "'{}'".format(pic), "'{}'".format(actor),
-                                    "'{}'".format(myname), "'1'"], 'sharebook')
-    res = mybaits.add(sql)
-    if res > 0:
+    typename = request.form['typename']
+    if title == "" or pic == "" or typename == "":
         res_data = {
-            'code': 1,
-            'msg': "分享成功"
+            'code': -1,
+            'msg': "书籍名称或者类型信息没有填写位置,分享失败"
         }
     else:
-        res_data = {
-            'code': 1,
-            'msg': "分享失败"
-        }
+        sql = create_sql.create_insert(['title', 'pic', 'actor', 'share_name', 'state', 'typename'],
+                                       ["'{}'".format(title), "'{}'".format(pic), "'{}'".format(actor),
+                                        "'{}'".format(myname), "'1'", "'{}'".format(typename)], 'sharebook')
+        res = mybaits.add(sql)
 
+        if res > 0:
+            res_data = {
+                'code': 1,
+                'msg': "分享成功"
+            }
+        else:
+            res_data = {
+                'code': 1,
+                'msg': "分享失败"
+            }
+
+    return json.dumps(res_data).encode('utf-8')
+
+
+# 获取我的分享
+@api_url_user.route('/getmyshare', methods=['POST', 'GET'])
+def get_all_share():
+    name = request.args['actor']
+    sql = create_sql.create_selectbyid(['*'], ['share_name'], 'sharebook', ["'{}'".format(name)])
+    res = mybaits.select(sql, ['id', 'name', 'pic', 'actor', 'state', 'share_name', 'typename'])
+    # 处理说明较长的图书
+    res_book = []
+    for k in res:
+        if len(k['name']) > 99:
+            k['name'] = k['name'][:99] + "......"
+        res_book.append(k)
+    res_data = {
+        'code': 1,
+        'data': res_book,
+    }
+    return json.dumps(res_data).encode('utf-8')
+
+
+@api_url_user.route('/del_share', methods=['POST', 'GET'])
+def get_del_sharebook():
+    uid = request.args['id']
+    sql = create_sql.create_del_more(['id'], 'sharebook', ['{}'.format(str(uid))])
+    mybaits.deledb(sql)
+    # 处理说明较长的图书
+    res_data = {
+        'code': 1,
+        'msg': "删除成功！"
+    }
     return json.dumps(res_data).encode('utf-8')
 
 
