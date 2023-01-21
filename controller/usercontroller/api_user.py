@@ -349,9 +349,12 @@ def get_update_img():
 
 # 获取当前信息数据
 def get_by_id():
-    sql = "select id from book where id>0 order by id desc limit 1"
+    sql = "select id from sharebook where id>0 order by id desc limit 1"
     res = mybaits.select(sql, ['id'])
-    return str(res[0]['id'] + 1)
+    if len(res) == 0:
+        return "1"
+    else:
+        return str(res[0]['id'] + 1)
 
 
 # 添加分享的书籍到数据库中
@@ -361,10 +364,23 @@ def add_sharebook():
     ids = request.form['id']
     pic = request.form['img']
     myname = request.form['myname']
-    print(request.form)
-    return "success"
+    actor = request.form['actor']
+    sql = create_sql.create_insert(['title', 'pic', 'actor', 'share_name', 'state'],
+                                   ["'{}'".format(title), "'{}'".format(pic), "'{}'".format(actor),
+                                    "'{}'".format(myname), "'1'"], 'sharebook')
+    res = mybaits.add(sql)
+    if res > 0:
+        res_data = {
+            'code': 1,
+            'msg': "分享成功"
+        }
+    else:
+        res_data = {
+            'code': 1,
+            'msg': "分享失败"
+        }
 
-
+    return json.dumps(res_data).encode('utf-8')
 
 
 if __name__ == '__main__':

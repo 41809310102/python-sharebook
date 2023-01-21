@@ -235,7 +235,11 @@
             type: 'POST',
             dataType: 'json',
             success(data){
-                layer.msg(data,{icon:1});
+               if(data.code==1){
+                   layer.msg(data.msg,{icon:1});
+               }else{
+                   layer.msg(data.msg,{icon:5});
+               }
             }
         })
     }
