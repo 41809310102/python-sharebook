@@ -6,6 +6,7 @@ class Sharebook(object):
         self.actor = None
         self.state = None
         self.share_name = None
+        self.typename = None
 
     def get_id(self):
         return self.id
@@ -25,6 +26,9 @@ class Sharebook(object):
     def get_share_name(self):
         return self.share_name
 
+    def get_typename(self):
+        return self.typename
+
     def set_id(self, value):
         self.id = value
 
@@ -43,6 +47,9 @@ class Sharebook(object):
     def set_share_name(self, value):
         self.share_name = value
 
+    def set_typename(self, value):
+        self.typename = value
+
     def get_classinfo(self):
-        res = ['id', 'title', 'pic', 'actor', 'state', 'share_name']
+        res = ['id', 'title', 'pic', 'actor', 'state', 'share_name', 'typename',]
         return res

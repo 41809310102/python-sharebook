@@ -41,6 +41,25 @@ def get_sharebook():
     return render_template("bookshare.html")
 
 
+@api_url_books.route('book/all_share', methods=['POST', 'GET'])
+def get_all_share():
+    title = request.args['book_name']
+    sql = create_sql.create_select(['*'], ['title'], 'sharebook',
+                                   ['"%{}%"'.format(title)])
+    res = mybaits.select(sql, ['id', 'name', 'pic', 'actor', 'state', 'share_name', 'typename'])
+    # 处理说明较长的图书
+    res_book = []
+    for k in res:
+        if len(k['name']) > 99:
+            k['name'] = k['name'][:99] + "......"
+        res_book.append(k)
+    res_data = {
+        'code': 1,
+        'data': res_book,
+    }
+    return json.dumps(res_data).encode('utf-8')
+
+
 # 图书下载
 @api_url_books.route('book/down_book', methods=['POST', 'GET'])
 def get_downbook():
@@ -48,7 +67,7 @@ def get_downbook():
     down_url = 'bookzip/booktxt/{}.txt'.format(str(ids))
     print(down_url)
     if not os.path.exists(down_url):
-        return "下载资源不存在，请联系管理员"# 这里初始化应该存在ec文件
+        return "下载资源不存在，请联系管理员"  # 这里初始化应该存在ec文件
     with open(down_url, 'rb') as f:
         r = f.read()
         response = Response(r, content_type='application/octet-stream')

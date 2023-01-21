@@ -33,7 +33,8 @@ def get_addbro():
     bid = request.form['bid']
     uid = request.form['uid']
     bt_time = datetime.datetime.now().strftime('%Y-%m-%d')
-    sql1 = create_sql.create_selectbyid(['id'], ['uid', 'bid'], 'brower', ['{}'.format(str(uid)), '{}'.format(str(bid))])
+    sql1 = create_sql.create_selectbyid(['id'], ['uid', 'bid'], 'brower',
+                                        ['{}'.format(str(uid)), '{}'.format(str(bid))])
     res = mybaits.select(sql1, ['id'])
     if len(res) > 0:
         res_data = {
@@ -50,6 +51,8 @@ def get_addbro():
                 'code': 1,
                 'msg': "借阅成功"
             }
+            # 成功后将书籍的借阅数量减一
+
         else:
             res_data = {
                 'code': 1,

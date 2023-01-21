@@ -149,7 +149,7 @@ function  found_share(){
     //窗口弹出input文本框输入的值
     var search_data = ""
     $.ajax({
-        url: "book/search?book_name="+search_data,
+        url: "book/all_share?book_name="+search_data,
         data:"",
         contentType:'application/json;charset=utf-8',
         type: 'get',
@@ -169,14 +169,14 @@ function  found_share(){
                        list1+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                            '<text class="title">' +"书名:"+res[k].name+ '</text>'+
                            '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].share_name+ '</text>'+
                            '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
                            '</button>'+'</div></div>'
                    }else if(res[k].typename=='编程'){
                        list2+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                            '<text class="title">' +"书名:"+res[k].name+ '</text>'+
                            '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].share_name+ '</text>'+
                            '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
                            '</button>'+'</div></div>'
 
@@ -184,7 +184,7 @@ function  found_share(){
                        list3+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                            '<text class="title">' +"书名:"+res[k].name+ '</text>'+
                            '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].share_name+ '</text>'+
                            '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
                            '</button>'+'</div></div>'
 
@@ -192,7 +192,7 @@ function  found_share(){
                        list4+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                            '<text class="title">' +"书名:"+res[k].name+ '</text>'+
                            '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].share_name+ '</text>'+
                            '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
                            '</button>'+'</div></div>'
 
@@ -200,7 +200,7 @@ function  found_share(){
                        list5+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                            '<text class="title">' +"书名:"+res[k].name+ '</text>'+
                            '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].share_name+ '</text>'+
                            '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
                            '</button>'+'</div></div>'
 
@@ -208,7 +208,7 @@ function  found_share(){
                        list6+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                            '<text class="title">' +"书名:"+res[k].name+ '</text>'+
                            '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                           ' <text class="title2">' +"上传者:"+res[k].actor+ '</text>'+
+                           ' <text class="title2">' +"上传者:"+res[k].share_name+ '</text>'+
                            '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'下载'+
                            '</button>'+'</div></div>'
                    }

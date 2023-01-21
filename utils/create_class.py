@@ -49,5 +49,5 @@ def py_create(name, code):
 if __name__ == '__main__':
     obj = Sharebook()
     create_table(create_db("sharebook", obj))
-    # create_class('Sharebook', ['id', 'title', 'pic', 'actor', 'state', 'share_name'], '../dao/Sharebook.py')
+    # create_class('Sharebook', ['id', 'title', 'pic', 'actor', 'state', 'share_name','typename'], '../dao/Sharebook.py')
     # create_class('', ['id', 'userid', 'movie_name', 'grade'], '../dao/Gradeuser')

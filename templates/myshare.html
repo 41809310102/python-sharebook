@@ -42,6 +42,12 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">图书类型:</label>
+            <div class="layui-input-block">
+                <input id="typename" type="text" name="title" required  lay-verify="required" placeholder="请输入图书类型" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">图书资源:</label>
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="file_txt">
@@ -56,7 +62,7 @@
             <p id="demoText"></p>
         </div>
         <div class="layui-form-item">
-        <div class="layui-input-block">
+        <div class="layui-input-block" style="margin-top: -80px;margin-left: 400px">
             <button onclick="istoshare()" class="layui-btn layui-btn-radius layui-btn-normal"  lay-filter="formDemo">立即分享</button>
         </div>
     </div>
@@ -164,6 +170,7 @@
         'title':"",
         'img': "",
         'id':"",
+        'typename':'',
         'myname':window.sessionStorage.getItem("username"),
         'actor':"",
     }
@@ -229,6 +236,7 @@
     function istoshare(){
         myshare.actor = document.getElementById("actor").value
         myshare.title = document.getElementById("title").value
+        myshare.typename = document.getElementById("typename").value
         $.ajax({
             url: "/admin/addbook",
             data:myshare,
@@ -237,6 +245,7 @@
             success(data){
                if(data.code==1){
                    layer.msg(data.msg,{icon:1});
+                   location.reload()
                }else{
                    layer.msg(data.msg,{icon:5});
                }
@@ -256,7 +265,7 @@
     function  found_share(){
         //窗口弹出input文本框输入的值
         $.ajax({
-            url: "admin/mybrower?uid="+window.sessionStorage.getItem("id"),
+            url: "/admin/getmyshare?actor="+window.sessionStorage.getItem("username"),
             data:"",
             contentType:'application/json;charset=utf-8',
             type: 'get',
@@ -265,22 +274,14 @@
                 if(data.code==1){
                     var res = data.data
                     let list1 = '';
-                    let list2 = '';
                     let  i = data.data.length;
                     for(let k = 0;k<i;k++){
-                        if(res[k].state==0){
+                        if(res[k].state=="1"){
                             list1+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
                                 '<text class="title">' +"书名:"+res[k].name+ '</text>'+
-                                '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                                ' <text class="title2">' +"借阅时间:"+res[k].bk_time+ '</text>'+
-                                '<div class="buttons">'+'<button type="button" onclick="guihuan('+res[k].bid+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'归还'+
-                                '</button>'+'</div></div>'
-                        }else{
-                            list2+='<div class="book">' +'<img src="'+res[k].pic+'" class="pic" alt="">'+
-                                '<text class="title">' +"书名:"+res[k].name+ '</text>'+
-                                '<text class="title1">' +"作者:"+res[k].actor+ '</text>'+
-                                ' <text class="title2">' +"归还时间:"+res[k].bk_time+ '</text>'+
-                                '<div class="buttons">'+'<button type="button" onclick="del_book('+res[k].bid+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'删除'+
+                                '<text class="title1">' +"类型:"+res[k].typename+ '</text>'+
+                                ' <text class="title2">' +"作者:"+res[k].actor+ '</text>'+
+                                '<div class="buttons">'+'<button type="button" onclick="del_book('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'删除'+
                                 '</button>'+'</div></div>'
                         }
                     }
@@ -291,28 +292,10 @@
             }
         })
     }
-    //归还
-    function guihuan(id) {
-        $.ajax({
-            url: "admin/guihuan?uid="+window.sessionStorage.getItem("id")+"&&bid="+id,
-            data:"",
-            contentType:'application/json;charset=utf-8',
-            type: 'get',
-            dataType: 'json',
-            success(data){
-                if(data.code==1){
-                    layer.msg(data.msg,{icon:1});
-                    found_share()
-                }else{
-                    layer.msg(data.msg,{icon:5});
-                }
-            }
-        })
-    }
     //删除
     function del_book(id) {
         $.ajax({
-            url: "admin/del_book?uid="+window.sessionStorage.getItem("id")+"&&bid="+id,
+            url: "/admin/del_share?id="+id,
             data:"",
             contentType:'application/json;charset=utf-8',
             type: 'get',
@@ -325,7 +308,7 @@
                 }
             }
         })
-        found_share()
+        location.reload()
     }
 </script>
 
